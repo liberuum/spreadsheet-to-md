@@ -3,6 +3,18 @@ JS script that reads selected spreadsheet page and exports a markdown table in a
 
 Mockup [sheet](https://docs.google.com/spreadsheets/d/1N4kcF0TiMmDlKE4K5TLT7jw48h1-nEgDelSIexT93EA/edit#gid=1845449681)
 
+## Run
+- Create your `OAuth 2.0` credentials from your google account that holds the spreadsheet. Download it into a `credentials.json` file and add it to the project. 
+- Create a mongoDB database and add its key in `.env`
+- Add Spreadsheet details in `auth.js`
+    - spreadsheet id
+    - range
+
+Run:
+- Require node ^14
+- `npm i`
+- `npm run start`
+
 ## Example
 The script outputs the below table in the `actuals.md` file with the numbers fetched from the spreadsheet. 
 
