@@ -5,7 +5,7 @@ Mockup [sheet](https://docs.google.com/spreadsheets/d/1N4kcF0TiMmDlKE4K5TLT7jw48
 
 ## Run
 - Create your `OAuth 2.0` credentials from your google account that holds the spreadsheet. Download it into a `credentials.json` file and add it to the project. 
-- Create a mongoDB database and add its key in `.env`
+- Create a mongoDB database and add its key in `.env`. The `env` file should have this key   `CONNECTION_STRING`=`<YOUR_KEY>`
 - Add Spreadsheet details in `auth.js`
     - spreadsheet id
     - range
