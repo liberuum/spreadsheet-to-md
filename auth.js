@@ -2,7 +2,12 @@ import fs from 'fs';
 import util from 'util';
 import readline from 'readline';
 import { google } from 'googleapis';
+import dotenv from 'dotenv';
 const fsPromises = fs.promises;
+dotenv.config();
+
+const SPREADSHEET_ID  = process.env.SPREADSHEET_ID;
+const SPREADSHEET_RANGE = process.env.SPREADSHEET_RANGE;
 
 
 
@@ -87,8 +92,8 @@ async function fetchData(auth) {
         const sheets = google.sheets('v4');
         // console.log('sheets', sheets.spreadsheets.get)
         // const getValues = sheets.spreadsheets.values.get;
-        const spreadsheetId = '1N4kcF0TiMmDlKE4K5TLT7jw48h1-nEgDelSIexT93EA'
-        const range = 'Payment Forecast!A11:X38'
+        const spreadsheetId = SPREADSHEET_ID
+        const range = SPREADSHEET_RANGE
         // const getValue = util.promisify(sheets.spreadsheets.get).bind(sheets)
         const response = await sheets.spreadsheets.values.get({ auth, spreadsheetId, range })
         // console.log('response', response.data.values)
