@@ -4,7 +4,7 @@ JS script that reads selected spreadsheet page and exports a markdown table in a
 Mockup [sheet](https://docs.google.com/spreadsheets/d/1N4kcF0TiMmDlKE4K5TLT7jw48h1-nEgDelSIexT93EA/edit#gid=1845449681)
 
 ## Install
-- Create your `OAuth 2.0` credentials from your google account that holds the spreadsheet. Download it into a `credentials.json` file and add it to the project. 
+- Create your [OAuth 2.0](https://support.google.com/cloud/answer/6158849?hl=en) credentials from your google account that holds the spreadsheet. Download it into a `credentials.json` file and add it to the project. 
 - Create an `.env` file where you will add credentials from mongodb and your google spreadsheet.
     - The `.env` file should have:
     ```
