@@ -2,12 +2,7 @@ import fs from 'fs';
 import util from 'util';
 import readline from 'readline';
 import { google } from 'googleapis';
-import dotenv from 'dotenv';
 const fsPromises = fs.promises;
-dotenv.config();
-
-const SPREADSHEET_ID  = process.env.SPREADSHEET_ID;
-const SPREADSHEET_RANGE = process.env.SPREADSHEET_RANGE;
 
 
 
@@ -89,20 +84,30 @@ async function storeToken(token) {
 
 async function fetchData(auth) {
     try {
+        const pattern = /\/spreadsheets\/d\/([^\/]+)\/edit[^#]*(?:#gid=([0-9]+))?/gm
+        let link = 'https://docs.google.com/spreadsheets/d/1N4kcF0TiMmDlKE4K5TLT7jw48h1-nEgDelSIexT93EA/edit#gid=1845449681';
+        let result = pattern.exec(link)
+        
         const sheets = google.sheets('v4');
-        // console.log('sheets', sheets.spreadsheets.get)
-        // const getValues = sheets.spreadsheets.values.get;
-        const spreadsheetId = SPREADSHEET_ID
-        const range = SPREADSHEET_RANGE
-        // const getValue = util.promisify(sheets.spreadsheets.get).bind(sheets)
+        const spreadsheetId = result[1]
+        // Getting Sheet Name
+        const sheetNameResponse = await sheets.spreadsheets.get({ auth, spreadsheetId });
+        const sheetData = sheetNameResponse.data.sheets.filter(item => {
+            if (item.properties.sheetId == Number(result[2]))
+                return item.properties.title
+        })
+        const sheetName = sheetData[0].properties.title;
+
+        // Getting Soreadsheet data
+        const range = `${sheetName}`
         const response = await sheets.spreadsheets.values.get({ auth, spreadsheetId, range })
-        // console.log('response', response.data.values)
         const rows = response.data.values
         if (rows.length == 0) {
             console.log('No data found.')
             return
         }
         return rows;
+
     } catch (err) {
         console.log(`The API returned an error: ${err}`)
         return

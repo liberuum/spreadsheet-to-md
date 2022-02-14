@@ -98,7 +98,6 @@ export default class CrunchData {
         this.setActualsByExpenseTag();
         this.setDifferenceByExpenseTag();
         this.setPaymentsByExpenseTag();
-        console.log('Preocessing actuals', this.actuals.length)
     }
 
     async uploadData() {
@@ -109,7 +108,6 @@ export default class CrunchData {
     async fetchDbData() {
         this.dbData = await get('budgetLineItems');
         this.expenseTags = this.getExpenseTags()
-        console.log('fetched dbData: ', this.dbData.length)
     }
 
     // console.log(await get('novemberActuals')); 
