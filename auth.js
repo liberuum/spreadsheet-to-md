@@ -85,7 +85,7 @@ async function storeToken(token) {
 async function fetchData(auth) {
     try {
         const pattern = /\/spreadsheets\/d\/([^\/]+)\/edit[^#]*(?:#gid=([0-9]+))?/gm
-        let link = 'https://docs.google.com/spreadsheets/d/1N4kcF0TiMmDlKE4K5TLT7jw48h1-nEgDelSIexT93EA/edit#gid=1845449681';
+        let link = 'https://docs.google.com/spreadsheets/d/1r2q6Xdd538VHlHBOxkiA65YY3cIKW_I3FJfRo8s5saY/edit#gid=916656612';
         let result = pattern.exec(link)
         
         const sheets = google.sheets('v4');
