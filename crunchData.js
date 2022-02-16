@@ -1,7 +1,5 @@
-import { addData, get } from './mongodb.js';
-
 export default class CrunchData {
-    dbData = [];
+    data = [];
     expenseTags = [];
 
     actuals = [];
@@ -13,7 +11,8 @@ export default class CrunchData {
     sumValues(keyName, expenseTag, dataObject) {
         let total = 0;
         for (const object of dataObject) {
-            if (object.expenseTag === expenseTag) {
+            if (object['Budget Category'] === expenseTag) {
+                
                 total += object[keyName]
             }
             // console.log(object[keyName])
@@ -35,8 +34,10 @@ export default class CrunchData {
     getExpenseTags() {
         let duplicateTags = [];
         let expenseTags = []
-        for (const object of this.dbData) {
-            duplicateTags.push(object.expenseTag)
+        for (const object of this.data) {
+            if (object['Budget Category'] === '')
+                break;
+            duplicateTags.push(object['Budget Category'])
         }
         // remove duplicates
         expenseTags = [...new Set(duplicateTags)];
@@ -45,24 +46,24 @@ export default class CrunchData {
     }
 
     setForecastByExpenseTag() {
-        const type = 'forecast2';
+        const type = 'Forecast';
         let totalByExpenseTag = {};
         totalByExpenseTag.type = type;
 
         for (const expenseTag of this.expenseTags) {
-            totalByExpenseTag[expenseTag] = this.sumValues(type, expenseTag, this.dbData)
+            totalByExpenseTag[expenseTag] = this.sumValues(type, expenseTag, this.data)
         }
         totalByExpenseTag.total = this.getTotalByBudgetVariance(totalByExpenseTag)
         this.actuals.push(totalByExpenseTag)
     }
 
     setActualsByExpenseTag() {
-        const type = 'actual';
+        const type = 'Actual';
         let totalByExpenseTag = {};
         totalByExpenseTag.type = type;
 
         for (const expenseTag of this.expenseTags) {
-            totalByExpenseTag[expenseTag] = this.sumValues(type, expenseTag, this.dbData)
+            totalByExpenseTag[expenseTag] = this.sumValues(type, expenseTag, this.data)
         }
         totalByExpenseTag.total = this.getTotalByBudgetVariance(totalByExpenseTag)
         this.actuals.push(totalByExpenseTag)
@@ -74,19 +75,19 @@ export default class CrunchData {
         totalByExpenseTag.type = type;
 
         for (const expenseTag of this.expenseTags) {
-            totalByExpenseTag[expenseTag] = this.sumValues(type, expenseTag, this.dbData)
+            totalByExpenseTag[expenseTag] = this.sumValues(type, expenseTag, this.data)
         }
         totalByExpenseTag.total = this.getTotalByBudgetVariance(totalByExpenseTag)
         this.actuals.push(totalByExpenseTag)
     }
 
     setPaymentsByExpenseTag() {
-        const type = 'payment'
+        const type = 'Paid (Dai)'
         let totalByExpenseTag = {};
         totalByExpenseTag.type = type;
 
         for (const expenseTag of this.expenseTags) {
-            totalByExpenseTag[expenseTag] = this.sumValues(type, expenseTag, this.dbData)
+            totalByExpenseTag[expenseTag] = this.sumValues(type, expenseTag, this.data)
         }
         totalByExpenseTag.total = this.getTotalByBudgetVariance(totalByExpenseTag)
         this.actuals.push(totalByExpenseTag)
@@ -96,7 +97,7 @@ export default class CrunchData {
     crunchData() {
         this.setForecastByExpenseTag();
         this.setActualsByExpenseTag();
-        this.setDifferenceByExpenseTag();
+        // this.setDifferenceByExpenseTag();
         this.setPaymentsByExpenseTag();
     }
 
@@ -105,9 +106,12 @@ export default class CrunchData {
         await addData(this.actuals, 'novemberActuals')
     }
 
-    async fetchDbData() {
-        this.dbData = await get('budgetLineItems');
+    async getData(filteredByMonth) {
+        this.data = filteredByMonth
+        // console.log(this.data['June 2021'])
         this.expenseTags = this.getExpenseTags()
+        console.log('expenseTags', this.expenseTags)
+
     }
 
     // console.log(await get('novemberActuals')); 
