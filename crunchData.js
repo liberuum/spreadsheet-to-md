@@ -12,7 +12,7 @@ export default class CrunchData {
         let total = 0;
         for (const object of dataObject) {
             if (object['Budget Category'] === expenseTag) {
-                
+
                 total += object[keyName]
             }
             // console.log(object[keyName])
@@ -93,12 +93,39 @@ export default class CrunchData {
         this.actuals.push(totalByExpenseTag)
     }
 
+    getActAndDiff() {
+        let actAndDiff = {};
+        // extract actual and forecast object
+        for (const type of ['Actual', 'Forecast'])
+            for (const actual of this.actuals) {
+                if (actual.type === type)
+                    actAndDiff[type] = actual;
+            }
+
+        return actAndDiff
+
+    }
+
+    calcDifference() {
+        let actAndDiff = this.getActAndDiff()
+        let differenceObj = {
+            type: 'Difference'
+        }
+        for (const tag of this.expenseTags) {
+            differenceObj[tag] = actAndDiff.Actual[tag] - actAndDiff.Forecast[tag];
+        }
+        differenceObj.total = actAndDiff.Actual.total - actAndDiff.Forecast.total;
+
+        this.actuals.push(differenceObj)
+    }
+
 
     crunchData() {
         this.setForecastByExpenseTag();
         this.setActualsByExpenseTag();
-        // this.setDifferenceByExpenseTag();
         this.setPaymentsByExpenseTag();
+        this.calcDifference()
+        return this.actuals;
     }
 
     async uploadData() {
@@ -107,10 +134,10 @@ export default class CrunchData {
     }
 
     async getData(filteredByMonth) {
+        this.data = []
         this.data = filteredByMonth
         // console.log(this.data['June 2021'])
         this.expenseTags = this.getExpenseTags()
-        console.log('expenseTags', this.expenseTags)
 
     }
 

@@ -8,9 +8,18 @@ processor.processData()
 // console.log('filteredByMonth', processor.filteredByMonth)
 
 const crunchData = new CrunchData();
-crunchData.getData(processor.filteredByMonth['June 2021'])
-crunchData.crunchData();
-console.log('actuals', crunchData.actuals)
+
+const actualsByMonth = {};
+for (const month in processor.filteredByMonth) {
+    crunchData.getData(processor.filteredByMonth[month])
+    actualsByMonth[month] = crunchData.crunchData();
+    crunchData.actuals = []
+}
+console.log('actualsByMonth', actualsByMonth)
+
+// crunchData.getData(processor.filteredByMonth['June 2021'])
+// console.log(crunchData.crunchData());
+
 
 // const mdExporter = new MdExporter(crunchData.expenseTags);
 // await mdExporter.fetchActuals();
